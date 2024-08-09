@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 import { ADMIN, USER } from '@/common/accessNUM'
 
 /**
- * 静态路由
+ * 静态路由 （隐藏，且不需要预加载的）
  */
 export const constantRoutes: RouteRecordRaw[] = [
   {
@@ -30,16 +30,18 @@ export const constantRoutes: RouteRecordRaw[] = [
 ]
 
 /**
- * 动态路由，根据权限进行渲染
+ * 动态路由，根据权限进行渲染 （控制菜单是否展示）
  */
 export const asyncRoutes: RouteRecordRaw[] = [
   {
     path: '/',
+    name: '主页',
+    component: () => import('../views/MainView.vue')
+  },
+  {
+    path: '/ScanQuestions',
     name: '浏览题目',
-    meta: {
-      access: [USER]
-    },
-    component: () => import('../views/AboutView.vue')
+    component: () => import('../views/ScanQuestions.vue')
   },
   {
     path: '/admin',
@@ -58,7 +60,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     // route level code-splitting
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import('../views/TTT.vue')
+    component: () => import('../views/AboutView.vue')
   }
 ]
 

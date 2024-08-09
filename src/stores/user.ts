@@ -7,6 +7,7 @@ import { Message } from '@arco-design/web-vue'
 import router from '@/router'
 import type { User } from '@/stores/entity/user'
 import { NOT_LOGIN } from '@/common/accessNUM'
+import { useRoute } from 'vue-router'
 
 export const useLoginUserStore = defineStore('loginUser', () => {
   const loginUser: User = reactive({
@@ -16,6 +17,12 @@ export const useLoginUserStore = defineStore('loginUser', () => {
     userRole: [NOT_LOGIN]
   })
 
+  const route = useRoute()
+
+  /**
+   * 用户登录
+   * @param userLoginRequest
+   */
   async function login(userLoginRequest: UserLoginRequest) {
     await UserControllerService.userLoginUsingPost(userLoginRequest).then((res) => {
       console.log('login return：', res)
@@ -45,7 +52,7 @@ export const useLoginUserStore = defineStore('loginUser', () => {
             loginUser.userName = <string>res?.data?.userName
             loginUser.userAvatar = <string>res?.data?.userAvatar
             loginUser.userProfile = <string>res?.data?.userProfile
-            loginUser.userRole = res?.data?.userRole ?? []
+            loginUser.userRole = <any>res?.data?.userRole ?? []
             const accessRoutes = usePermissionStore().generateRoutes(loginUser.userRole)
             accessRoutes.forEach((item) => {
               router.addRoute(item)
@@ -59,5 +66,16 @@ export const useLoginUserStore = defineStore('loginUser', () => {
     })
   }
 
-  return { loginUser, getLoginUser, login }
+  function logout() {
+    return new Promise<void>(() => {
+      UserControllerService.userLogoutUsingPost().then((res) => {
+        console.log('logout result: ', res)
+        if (res.code === 0) {
+          Message.success('退出成功')
+        }
+      })
+    })
+  }
+
+  return { loginUser, getLoginUser, login, logout }
 })

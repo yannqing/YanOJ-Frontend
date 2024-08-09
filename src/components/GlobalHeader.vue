@@ -11,27 +11,33 @@
               <img src="../assets/YannOJ.svg" style="margin-top: 7px" />
             </div>
           </a-menu-item>
-          <a-menu-item v-for="item in menu" :key="item.path">{{ item.name }} </a-menu-item>
+          <a-menu-item v-for="item in menu" :key="item.path">{{ item.name }}</a-menu-item>
         </a-menu>
       </a-col>
-      <a-col flex="100px">
-        <div style="text-align: center">
-          {{ loginUser.userName }}
-          <a-avatar v-if="!loginUser.userRole.includes('notLogin')">
-            <img
-              alt="avatar"
-              src="https://blogback.yannqing.com/api/v2/objects/avatar/0vqxqul8pu2skmwokn.jpg"
-            />
-          </a-avatar>
-        </div>
-      </a-col>
+      <a-dropdown>
+        <a-button type="text" style="height: fit-content">
+          <div style="text-align: center; color: #181818">
+            {{ loginUser.userName }}
+            <a-avatar v-if="isLogin">
+              <img
+                alt="avatar"
+                src="https://blogback.yannqing.com/api/v2/objects/avatar/0vqxqul8pu2skmwokn.jpg"
+              />
+            </a-avatar>
+          </div>
+        </a-button>
+        <template #content>
+          <a-doption @click="logout" v-if="isLogin">退出</a-doption>
+          <a-doption @click="$router.push('/auth/login?redirect=to.path')" v-else>登录</a-doption>
+        </template>
+      </a-dropdown>
     </a-row>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onBeforeRouteUpdate, useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useLoginUserStore } from '@/stores/user'
 import { usePermissionStore } from '@/stores/permission'
 import type { User } from '@/stores/entity/user'
@@ -41,11 +47,13 @@ import type { RouteRecordRaw } from 'vue-router'
 //定义路由 router
 const router = useRouter()
 
-const store = useLoginUserStore()
+const userStore = useLoginUserStore()
 const permissionStore = usePermissionStore()
 
+const isLogin = ref(false)
+
 const menu = computed(() => {
-  return permissionStore.generateRoutes(store.loginUser.userRole)
+  return permissionStore.generateRoutes(userStore.loginUser.userRole)
 })
 
 //选中的菜单项
@@ -56,13 +64,22 @@ router.afterEach((to, from, failure) => {
   selectedKeys.value = [to.path]
 })
 
-onBeforeRouteUpdate(() => {
-  useLoginUserStore().getLoginUser()
+onBeforeRouteUpdate(async () => {})
+
+onMounted(async () => {
+  await useLoginUserStore().getLoginUser()
+  isLogin.value = !loginUser.value.userRole.includes('notLogin')
 })
 
 const loginUser: ComputedRef<User> = computed(() => {
-  return store.loginUser
+  return userStore.loginUser
 })
+
+const logout = () => {
+  userStore.logout()
+  useLoginUserStore().getLoginUser()
+  window.location.reload()
+}
 
 //点击菜单项，进行路由跳转
 const jump = (key: string) => {
@@ -74,5 +91,9 @@ const jump = (key: string) => {
 .menu-demo {
   box-sizing: border-box;
   width: 100%;
+}
+
+.arco-dropdown-open .arco-icon-down {
+  transform: rotate(180deg);
 }
 </style>

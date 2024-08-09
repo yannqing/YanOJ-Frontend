@@ -8,7 +8,7 @@ import { ADMIN } from '@/common/accessNUM'
 export const usePermissionStore = defineStore('permission', () => {
   const routes: Ref<UnwrapRef<any[]>> = ref([])
 
-  function hasPermission(roles: string[], route: RouteRecordRaw): boolean {
+  function hasPermission(roles: string[], route: any): boolean {
     // if (roles || route?.meta?.access) {
     //   const accRoutes = route?.meta?.access as string[]
     //   return roles.some((role) => accRoutes.includes(role))
@@ -17,7 +17,7 @@ export const usePermissionStore = defineStore('permission', () => {
 
     // 确保 roles 是数组，并且 route?.meta?.access 是一个数组
     if (Array.isArray(roles) && Array.isArray(route?.meta?.access)) {
-      console.log('都是数组，未登录')
+      // console.log('都是数组，未登录')
       const accRoutes = route.meta.access as string[]
       return roles.some((role) => accRoutes.includes(role))
     }
@@ -56,7 +56,7 @@ export const usePermissionStore = defineStore('permission', () => {
       accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
     }
     routes.value = accessedRoutes
-    console.log('刷新权限：', routes.value)
+    // console.log('刷新权限：', routes.value)
     return accessedRoutes
   }
 
