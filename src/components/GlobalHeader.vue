@@ -42,7 +42,6 @@ import { useLoginUserStore } from '@/stores/user'
 import { usePermissionStore } from '@/stores/permission'
 import type { User } from '@/stores/entity/user'
 import type { ComputedRef } from 'vue'
-import type { RouteRecordRaw } from 'vue-router'
 
 //定义路由 router
 const router = useRouter()
