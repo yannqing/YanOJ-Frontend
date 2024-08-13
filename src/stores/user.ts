@@ -25,16 +25,21 @@ export const useLoginUserStore = defineStore('loginUser', () => {
    */
   async function login(userLoginRequest: UserLoginRequest) {
     await UserControllerService.userLoginUsingPost(userLoginRequest).then((res) => {
-      console.log('login return：', res)
-      console.log('login User：', res.data)
       if (res.code === 0) {
         Message.success('登录成功')
+        // 加载路由权限
+        const accessRoutes = usePermissionStore().generateRoutes(loginUser.userRole)
+        accessRoutes.forEach((item) => {
+          router.addRoute(item)
+        })
+
         loginUser.userName = res.data.userName
         loginUser.userAvatar = res.data.userAvatar
         loginUser.userProfile = res.data.userProfile
         loginUser.userRole = [res.data.userRole]
-        console.log('loginUser：', loginUser)
-        router.replace('/')
+        // 获取重定向 URL 并使用 router.replace() 进行跳转
+        const redirectUrl = (route.query.redirect as string) || '/'
+        router.replace(redirectUrl)
       } else {
         Message.error(res.message)
       }
@@ -72,6 +77,10 @@ export const useLoginUserStore = defineStore('loginUser', () => {
         console.log('logout result: ', res)
         if (res.code === 0) {
           Message.success('退出成功')
+          const accessRoutes = usePermissionStore().generateRoutes(loginUser.userRole)
+          accessRoutes.forEach((item) => {
+            router.addRoute(item)
+          })
         }
       })
     })

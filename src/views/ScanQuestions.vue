@@ -10,7 +10,8 @@ onMounted(() => {
     console.log('题目信息：', res)
     if (res.code === 0) {
       data.value = res.data.records
-      Message.success('查询信息成功！')
+    } else {
+      Message.success(res.message)
     }
   })
 })

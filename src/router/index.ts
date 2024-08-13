@@ -44,6 +44,14 @@ export const asyncRoutes: RouteRecordRaw[] = [
     component: () => import('../views/ScanQuestions.vue')
   },
   {
+    path: '/doQuestion',
+    name: '做题',
+    meta: {
+      access: [USER]
+    },
+    component: () => import('../views/DoQuestionView.vue')
+  },
+  {
     path: '/admin',
     name: '管理员页面',
     meta: {

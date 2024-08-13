@@ -16,7 +16,6 @@ const user = useLoginUserStore()
  */
 const doInit = () => {
   console.log('hello，欢迎来到yanOJ')
-  user.getLoginUser()
 }
 
 onMounted(() => {

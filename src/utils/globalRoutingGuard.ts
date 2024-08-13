@@ -44,8 +44,6 @@ router.beforeEach(async (to, from, next) => {
     }
     //用户已登录，直接放行
   } else {
-    console.log('登录的路由：', usePermissionStore().routes)
-    console.log('login already')
     next()
   }
 })

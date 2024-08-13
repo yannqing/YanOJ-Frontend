@@ -28,7 +28,7 @@
         </a-button>
         <template #content>
           <a-doption @click="logout" v-if="isLogin">退出</a-doption>
-          <a-doption @click="$router.push('/auth/login?redirect=to.path')" v-else>登录</a-doption>
+          <a-doption @click="toLogin" v-else>登录</a-doption>
         </template>
       </a-dropdown>
     </a-row>
@@ -36,24 +36,26 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeRouteUpdate, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { computed, onMounted, ref } from 'vue'
 import { useLoginUserStore } from '@/stores/user'
-import { usePermissionStore } from '@/stores/permission'
 import type { User } from '@/stores/entity/user'
 import type { ComputedRef } from 'vue'
+import { usePermissionStore } from '@/stores/permission'
+
+const props = defineProps<{
+  loadMenu: any
+}>()
 
 //定义路由 router
 const router = useRouter()
+const route = useRoute()
 
 const userStore = useLoginUserStore()
-const permissionStore = usePermissionStore()
 
 const isLogin = ref(false)
 
-const menu = computed(() => {
-  return permissionStore.generateRoutes(userStore.loginUser.userRole)
-})
+const menu = ref(props.loadMenu)
 
 //选中的菜单项
 const selectedKeys = ref(['/'])
@@ -63,11 +65,19 @@ router.afterEach((to, from, failure) => {
   selectedKeys.value = [to.path]
 })
 
-onBeforeRouteUpdate(async () => {})
+const toLogin = () => {
+  router.push(`/auth/login?redirect=${route.path}`)
+}
 
 onMounted(async () => {
   await useLoginUserStore().getLoginUser()
   isLogin.value = !loginUser.value.userRole.includes('notLogin')
+  const accessRoutes = usePermissionStore().generateRoutes(useLoginUserStore().loginUser.userRole)
+  accessRoutes.forEach((item) => {
+    router.addRoute(item)
+  })
+  menu.value = accessRoutes
+  selectedKeys.value = [route.path]
 })
 
 const loginUser: ComputedRef<User> = computed(() => {
