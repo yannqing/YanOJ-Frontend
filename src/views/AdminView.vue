@@ -9,9 +9,10 @@
 <style scoped>
 @media (min-width: 1024px) {
   .about {
-    min-height: 100vh;
+    min-height: 75vh;
     display: flex;
     align-items: center;
+    //background-color: #e34232;
   }
 }
 </style>

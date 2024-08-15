@@ -1,3 +1,33 @@
+<template>
+  <div>
+    <a-table :columns="columns" :data="data">
+      <template #tags="{ record }">
+        <a-space wrap>
+          <a-tag v-for="(tag, index) of record.tags" :key="index" :color="colors[index]"
+            >{{ tag }}
+          </a-tag>
+        </a-space>
+      </template>
+      <template #pass="{ record }">
+        {{ passPercentage(record.acceptednum, record.submitnum) }}</template
+      >
+      <template #createTime="{ record }">
+        <div>
+          {{ dataFormat(record.userVO.createTime) }}
+        </div>
+      </template>
+      <template #optional="{ record }">
+        <a-space wrap style="width: 130px">
+          <a-button type="primary" @click="$router.push(`/doQuestion/${record.id}`)">修改</a-button>
+          <a-button status="danger" @click="$router.push(`/doQuestion/${record.id}`)"
+            >删除</a-button
+          >
+        </a-space>
+      </template>
+    </a-table>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import type { QuestionQueryRequest } from '@/generated'
@@ -27,16 +57,32 @@ const columns = [
     dataIndex: 'id'
   },
   {
-    title: '题目名称',
+    title: '标题',
     dataIndex: 'title'
+  },
+  {
+    title: '内容',
+    dataIndex: 'content'
+  },
+  {
+    title: '答案',
+    dataIndex: 'answer'
   },
   {
     title: '标签',
     slotName: 'tags'
   },
   {
-    title: '通过率',
-    slotName: 'pass'
+    title: '提交数',
+    dataIndex: 'submitnum'
+  },
+  {
+    title: '通过数',
+    dataIndex: 'acceptednum'
+  },
+  {
+    title: '用户id',
+    dataIndex: 'userid'
   },
   {
     title: '创建时间',
@@ -75,29 +121,4 @@ const passPercentage = (acceptedNum: number, submitNum: number) => {
 }
 </script>
 
-<template>
-  <div>
-    <a-table :columns="columns" :data="data">
-      <template #tags="{ record }">
-        <a-space wrap>
-          <a-tag v-for="(tag, index) of record.tags" :key="index" :color="colors[index]"
-            >{{ tag }}
-          </a-tag>
-        </a-space>
-      </template>
-      <template #pass="{ record }">
-        {{ passPercentage(record.acceptednum, record.submitnum) }}</template
-      >
-      <template #createTime="{ record }">
-        <div>
-          {{ dataFormat(record.userVO.createTime) }}
-        </div>
-      </template>
-      <template #optional="{ record }">
-        <a-button type="primary" @click="$router.push(`/doQuestion/${record.id}`)">做题</a-button>
-      </template>
-    </a-table>
-  </div>
-</template>
-
-<style scoped lang="scss"></style>
+<style scoped></style>

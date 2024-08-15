@@ -44,7 +44,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     component: () => import('../views/ScanQuestions.vue')
   },
   {
-    path: '/doQuestion',
+    path: '/doQuestion/:id*',
     name: '做题',
     meta: {
       access: [USER]
@@ -58,6 +58,22 @@ export const asyncRoutes: RouteRecordRaw[] = [
       access: [ADMIN]
     },
     component: () => import('../views/AdminView.vue')
+  },
+  {
+    path: '/manageQuestions',
+    name: '管理题目',
+    meta: {
+      access: [ADMIN]
+    },
+    component: () => import('../views/ManageQuestions.vue')
+  },
+  {
+    path: '/createQuestions',
+    name: '创建题目',
+    meta: {
+      access: [ADMIN]
+    },
+    component: () => import('../views/CreateQuestionView.vue')
   },
   {
     path: '/about',

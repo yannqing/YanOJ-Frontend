@@ -1,25 +1,24 @@
 <template>
-  <div id="container" ref="codeEditorRef" style="min-height: 70vh"></div>
+  <div id="container" style="min-height: 70vh"></div>
 </template>
 
 <script setup>
 import * as monaco from 'monaco-editor'
 import { onMounted, ref, toRaw, watch } from 'vue'
 
-const codeEditorRef = ref()
 const codeEditor = ref()
 
 const props = defineProps({
   language: String
 })
 
-const fillValue = () => {
-  if (!codeEditor.value) {
-    return
-  }
-  // 改变值
-  toRaw(codeEditor.value).setValue('新的值')
-}
+// const fillValue = () => {
+//   if (!codeEditor.value) {
+//     return
+//   }
+//   // 改变值
+//   toRaw(codeEditor.value).setValue('新的值')
+// }
 
 self.MonacoEnvironment = {
   getWorker: function (workerId, label) {
@@ -69,7 +68,7 @@ onMounted(() => {
     theme: 'vs-dark',
     automaticLayout: true,
     colorDecorators: true,
-    language: 'java'
+    language: props.language
   })
 
   // 编辑 监听内容变化

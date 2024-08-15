@@ -15,7 +15,7 @@
         <a-select :options="languages" style="width: 350px" v-model="selectLanguage"></a-select>
       </div>
       <CodeEditor
-        style="width: 50vw; margin: 0 10px 10px 10px"
+        style="width: 50vw; margin: 0 10px 0 10px"
         :language="selectLanguage"
       ></CodeEditor>
     </div>
@@ -27,9 +27,19 @@ import CodeEditor from '@/components/CodeEditor.vue'
 import { onMounted, ref } from 'vue'
 import ShowQuestions from '@/components/DoQuestion/ShowQuestions.vue'
 import ShowAnswer from '@/components/DoQuestion/ShowAnswer.vue'
+import { useRoute } from 'vue-router'
 
+// Monaco Editor 可选的语言
 const languages = ref(['java', 'html', 'python', 'Go', 'javascript', 'css', 'json'])
-const selectLanguage = ref('java')
+// Monaco Editor 默认选择的语言
+const selectLanguage = ref('javascript')
+
+const route = useRoute()
+
+onMounted(() => {
+  console.log('route.params', route.params)
+  console.log('route.state', route.state)
+})
 </script>
 
 <style scoped lang="scss">
