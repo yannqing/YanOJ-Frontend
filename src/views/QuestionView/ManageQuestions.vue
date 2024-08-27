@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin: 20px" class="">
     <a-table :columns="columns" :data="data">
       <template #tags="{ record }">
         <a-space wrap>
@@ -18,18 +18,46 @@
       </template>
       <template #optional="{ record }">
         <a-space wrap style="width: 130px">
-          <a-button type="primary" @click="$router.push(`/doQuestion/${record.id}`)">修改</a-button>
+          <a-button type="primary" @click="handleClick">修改</a-button>
           <a-button status="danger" @click="$router.push(`/doQuestion/${record.id}`)"
             >删除</a-button
           >
         </a-space>
       </template>
+      <!--编辑框-->
     </a-table>
+
+    <a-modal
+      v-model:visible="visible"
+      title="编辑题目"
+      @cancel="handleCancel"
+      @before-ok="handleBeforeOk"
+    >
+      <a-form :model="form">
+        <a-form-item field="name" label="标题">
+          <a-input v-model="form.name" />
+        </a-form-item>
+        <a-form-item field="name" label="内容">
+          <a-input v-model="form.name" />
+        </a-form-item>
+        <a-form-item field="name" label="标签">
+          <a-input v-model="form.name" />
+        </a-form-item>
+        <a-form-item field="post" label="Post">
+          <a-select v-model="form.post">
+            <a-option value="post1">Post1</a-option>
+            <a-option value="post2">Post2</a-option>
+            <a-option value="post3">Post3</a-option>
+            <a-option value="post4">Post4</a-option>
+          </a-select>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import type { QuestionQueryRequest } from '@/generated'
 import { QuestionControllerService } from '@/generated'
 import { Message } from '@arco-design/web-vue'
@@ -118,6 +146,26 @@ const passPercentage = (acceptedNum: number, submitNum: number) => {
     const percentage = (acceptedNum * 100) / submitNum
     return `${percentage}%  (${acceptedNum}/${submitNum})`
   }
+}
+
+const visible = ref(false)
+const form = reactive({
+  title: '',
+  content: '',
+  tags: []
+})
+
+const handleClick = () => {
+  visible.value = true
+}
+const handleBeforeOk = (done) => {
+  console.log(form)
+  window.setTimeout(() => {
+    done()
+  }, 3000)
+}
+const handleCancel = () => {
+  visible.value = false
 }
 </script>
 

@@ -2,7 +2,6 @@
 
 <template>
   <div>
-    <h2 style="text-align: center">用户页</h2>
     <router-view />
   </div>
 </template>

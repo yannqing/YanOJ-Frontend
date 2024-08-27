@@ -14,7 +14,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       {
         path: '/auth/login',
         name: '登录',
-        component: () => import('../views/LoginView.vue')
+        component: () => import('../views/StaticView/LoginView.vue')
       }
     ]
   },
@@ -25,7 +25,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       hidden: true,
       access: [USER]
     },
-    component: () => import('../views/NoAuthView.vue')
+    component: () => import('../views/StaticView/NoAuthView.vue')
   }
 ]
 
@@ -41,7 +41,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
   {
     path: '/ScanQuestions',
     name: '浏览题目',
-    component: () => import('../views/ScanQuestions.vue')
+    component: () => import('../views/QuestionView/ScanQuestions.vue')
   },
   {
     path: '/doQuestion/:id*',
@@ -49,7 +49,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     meta: {
       access: [USER]
     },
-    component: () => import('../views/DoQuestionView.vue')
+    component: () => import('../views/QuestionView/DoQuestionView.vue')
   },
   {
     path: '/admin',
@@ -65,7 +65,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     meta: {
       access: [ADMIN]
     },
-    component: () => import('../views/ManageQuestions.vue')
+    component: () => import('../views/QuestionView/ManageQuestions.vue')
   },
   {
     path: '/createQuestions',
@@ -73,7 +73,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     meta: {
       access: [ADMIN]
     },
-    component: () => import('../views/CreateQuestionView.vue')
+    component: () => import('../views/QuestionView/CreateQuestionView.vue')
   },
   {
     path: '/scanQuestionSubmit',
@@ -84,7 +84,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     // route level code-splitting
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import('../views/ScanQuestionSubmit.vue')
+    component: () => import('../views/QuestionView/ScanQuestionSubmit.vue')
   },
   {
     path: '/about',

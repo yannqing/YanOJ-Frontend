@@ -6,6 +6,7 @@ import '@arco-design/web-vue/dist/arco.css'
 import router from './router'
 import './utils/globalRoutingGuard'
 import 'bytemd/dist/index.css'
+import 'animate.css'
 
 const app = createApp(App)
 
