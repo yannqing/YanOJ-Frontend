@@ -8,8 +8,12 @@ import { ref } from 'vue'
 const value = ref('')
 
 const plugins = [gfm(), highlight(), gemoji()]
+
+const emit = defineEmits(['handleChange'])
+
 const handleChange = (v: string) => {
   value.value = v
+  emit('handleChange', value.value)
 }
 </script>
 

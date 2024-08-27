@@ -18,38 +18,31 @@
       </template>
       <template #optional="{ record }">
         <a-space wrap style="width: 130px">
-          <a-button type="primary" @click="handleClick">修改</a-button>
-          <a-button status="danger" @click="$router.push(`/doQuestion/${record.id}`)"
-            >删除</a-button
-          >
+          <a-button type="primary" @click="handleClick(record)">修改</a-button>
+          <a-button status="danger" @click="handleClickWarning(record)">删除</a-button>
         </a-space>
       </template>
-      <!--编辑框-->
     </a-table>
-
+    <!--编辑框-->
     <a-modal
       v-model:visible="visible"
       title="编辑题目"
-      @cancel="handleCancel"
-      @before-ok="handleBeforeOk"
+      @cancel="handleEditCancel"
+      @ok="handleEditOk"
     >
-      <a-form :model="form">
+      <a-form :model="updateForm">
         <a-form-item field="name" label="标题">
-          <a-input v-model="form.name" />
+          <a-input v-model="updateForm.title" />
         </a-form-item>
         <a-form-item field="name" label="内容">
-          <a-input v-model="form.name" />
+          <a-textarea
+            v-model="updateForm.content"
+            placeholder="Please enter something"
+            allow-clear
+          />
         </a-form-item>
         <a-form-item field="name" label="标签">
-          <a-input v-model="form.name" />
-        </a-form-item>
-        <a-form-item field="post" label="Post">
-          <a-select v-model="form.post">
-            <a-option value="post1">Post1</a-option>
-            <a-option value="post2">Post2</a-option>
-            <a-option value="post3">Post3</a-option>
-            <a-option value="post4">Post4</a-option>
-          </a-select>
+          <a-input-tag v-model="updateForm.tags" placeholder="Please Enter" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -60,10 +53,14 @@
 import { onMounted, reactive, ref } from 'vue'
 import type { QuestionQueryRequest } from '@/generated'
 import { QuestionControllerService } from '@/generated'
-import { Message } from '@arco-design/web-vue'
+import { Message, Modal } from '@arco-design/web-vue'
 import { dataFormat } from '@/utils/util'
 
 onMounted(() => {
+  flushData()
+})
+
+const flushData = () => {
   QuestionControllerService.listQuestionVoByPageUsingPost(requestData).then((res) => {
     console.log('题目信息：', res)
     if (res.code === 0) {
@@ -72,7 +69,7 @@ onMounted(() => {
       Message.success(res.message)
     }
   })
-})
+}
 
 const requestData: QuestionQueryRequest = {
   current: 1,
@@ -91,10 +88,6 @@ const columns = [
   {
     title: '内容',
     dataIndex: 'content'
-  },
-  {
-    title: '答案',
-    dataIndex: 'answer'
   },
   {
     title: '标签',
@@ -149,23 +142,64 @@ const passPercentage = (acceptedNum: number, submitNum: number) => {
 }
 
 const visible = ref(false)
-const form = reactive({
+const updateForm = reactive({
+  id: '',
   title: '',
   content: '',
   tags: []
 })
+const deleteId = reactive({
+  id: ''
+})
 
-const handleClick = () => {
+const handleClick = (data: object) => {
+  console.log('data', data)
   visible.value = true
+  updateForm.id = data.id
+  updateForm.title = data.title
+  updateForm.content = data.content
+  updateForm.tags = data.tags
+  console.log('form', updateForm)
 }
-const handleBeforeOk = (done) => {
-  console.log(form)
-  window.setTimeout(() => {
-    done()
-  }, 3000)
+const handleEditOk = () => {
+  QuestionControllerService.updateQuestionUsingPost(updateForm).then((res) => {
+    if (res.code === 0) {
+      Message.success('更新数据成功！')
+      flushData()
+    } else {
+      Message.error('更新数据失败：' + res.message)
+    }
+  })
 }
-const handleCancel = () => {
+const handleEditCancel = () => {
   visible.value = false
+  form.title = ''
+  form.content = ''
+  form.tags = []
+}
+
+const deleteById = () => {
+  QuestionControllerService.deleteQuestionUsingPost(deleteId).then((res) => {
+    if (res.code === 0) {
+      Message.success('删除成功')
+      flushData()
+    } else {
+      Message.error('删除失败：' + res.message)
+    }
+  })
+}
+
+const handleClickWarning = (data: object) => {
+  deleteId.id = data.id
+  console.log('deleteId.value', deleteId.id)
+  Modal.warning({
+    title: '危险操作',
+    content: `请问是否要删除题目是${data.title}的数据？`,
+    hideCancel: false,
+    onOk: () => {
+      deleteById()
+    }
+  })
 }
 </script>
 

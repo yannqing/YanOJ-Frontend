@@ -3,20 +3,25 @@
     <a-space direction="vertical">
       <div class="box">
         <span class="left-font">标题</span>
-        <a-input class="right-component" placeholder="请输入标题"></a-input>
+        <a-input class="right-component" placeholder="请输入标题" v-model="request.title"></a-input>
       </div>
       <div class="box">
         <span class="left-font">标签</span>
         <a-input-tag
-          :default-value="['简单']"
           class="right-component"
           placeholder="Please Enter"
           allow-clear
+          v-model="request.tags"
         />
       </div>
       <div class="box">
         <span class="left-font">题目内容</span>
-        <MarkDownEditor class="right-component" />
+        <MarkDownEditor @handleChange="receiveChild" class="right-component" />
+      </div>
+      <div class="box">
+        <a-button type="primary" style="width: 80px" class="right-component" @click="createQuestion"
+          >添加</a-button
+        >
       </div>
     </a-space>
   </div>
@@ -24,6 +29,32 @@
 
 <script setup lang="ts">
 import MarkDownEditor from '@/components/MarkDownEditor.vue'
+import { QuestionControllerService } from '@/generated'
+import { Message } from '@arco-design/web-vue'
+import { reactive } from 'vue'
+
+const receiveChild = (val) => {
+  request.content = val
+}
+
+const request = reactive({
+  title: '',
+  content: '',
+  tags: []
+})
+
+const createQuestion = () => {
+  QuestionControllerService.addQuestionUsingPost(request).then((res) => {
+    if (res.code === 0) {
+      Message.success('添加成功')
+      request.title = ''
+      request.content = ''
+      request.tags = []
+    } else {
+      Message.error('添加失败：' + res.message)
+    }
+  })
+}
 </script>
 
 <style scoped lang="scss">
