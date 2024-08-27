@@ -2,6 +2,7 @@
 import { QuestionControllerService } from '@/generated'
 import { onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { passPercentage } from '../../utils/util'
 
 const questionId = ref(1)
 
@@ -10,14 +11,6 @@ const route = useRoute()
 const question = reactive<any>({
   data: {}
 })
-
-const passPercentage = (submitNum: number, acceptedNum: number) => {
-  if (submitNum === 0) {
-    return 0
-  } else {
-    return (acceptedNum * 100) / submitNum
-  }
-}
 
 onMounted(async () => {
   if (route.params.id[0] === ':id*') {
@@ -97,7 +90,7 @@ onMounted(async () => {
           <a-space wrap>
             <span style="color: #9494b8">通过率</span
             ><span
-              >{{ passPercentage(question.data?.submitnum, question.data?.acceptednum) }} %</span
+              >{{ passPercentage(question.data?.acceptednum, question.data?.submitnum) }} %</span
             >
           </a-space>
         </div>

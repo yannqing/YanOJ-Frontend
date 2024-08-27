@@ -15,7 +15,7 @@
         <a-select :options="languages" style="width: 350px" v-model="selectLanguage"></a-select>
       </div>
       <CodeEditor
-        style="width: 50vw; margin: 0 10px 0 10px"
+        style="width: 50vw; margin: 0 10px 0 10px; height: 50vh"
         :language="selectLanguage"
       ></CodeEditor>
     </div>
@@ -32,7 +32,7 @@ import { useRoute } from 'vue-router'
 // Monaco Editor 可选的语言
 const languages = ref(['java', 'html', 'python', 'Go', 'javascript', 'css', 'json'])
 // Monaco Editor 默认选择的语言
-const selectLanguage = ref('javascript')
+const selectLanguage = ref('java')
 
 const route = useRoute()
 

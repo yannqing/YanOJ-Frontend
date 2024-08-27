@@ -5,5 +5,25 @@
  */
 export const dataFormat = (date: string) => {
   const dateStr = new Date(date)
-  return dateStr.toISOString().replace('T', ' ').substring(0, 19)
+  return dateStr
+    .toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      timeZone: 'Asia/Shanghai' // 假设你想要北京时间
+    })
+    .replace(/\//g, '-')
+}
+
+export const passPercentage = (acceptedNum: number, submitNum: number) => {
+  if (submitNum === 0) {
+    return '0%  (0/0)'
+  } else {
+    const percentage = ((acceptedNum * 100) / submitNum).toFixed(2)
+    return `${percentage}%  (${acceptedNum}/${submitNum})`
+  }
 }

@@ -1,21 +1,24 @@
 <script setup lang="ts">
-import BasicLayout from '@/layouts/BasicLayout.vue'
-import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
+import { ref, provide, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/user'
-import { onBeforeMount, onBeforeUpdate, onMounted } from 'vue'
+import { usePermissionStore } from '@/stores/permission'
+import BasicLayout from '@/layouts/BasicLayout.vue'
 import AuthLayout from '@/layouts/AuthLayout.vue'
+import router from '@/router'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const router = useRouter()
 const route = useRoute()
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const user = useLoginUserStore()
 
-/**
- * 全局初始化函数，单次调用函数接口
- */
-const doInit = () => {
+const isRoutesGenerated = ref(false)
+provide('isRoutesGenerated', isRoutesGenerated)
+
+const doInit = async () => {
   console.log('hello，欢迎来到yanOJ')
+  const accessRoutes = usePermissionStore().generateRoutes(useLoginUserStore().loginUser.userRole)
+  accessRoutes.forEach((item) => {
+    router.addRoute(item)
+  })
+  await router.replace(localStorage.getItem('currentPath'))
 }
 
 onMounted(() => {
@@ -31,5 +34,3 @@ onMounted(() => {
     <BasicLayout />
   </template>
 </template>
-
-<style scoped></style>

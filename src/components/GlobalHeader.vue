@@ -7,8 +7,10 @@
         <a-menu mode="horizontal" :selected-keys="selectedKeys" @menu-item-click="jump">
           <!--      菜单项-->
           <a-menu-item key="0" :style="{ padding: 0, marginRight: '38px' }" disabled>
-            <div style="margin-top: 3px">
-              <img src="../assets/YannOJ.svg" style="margin-top: 7px" />
+            <div style="margin-top: 20px">
+              <icon-font type="icon-flag" :size="32" />
+
+              <!--              <img src="../assets/YannOJ.svg" style="margin-top: 7px" />-->
             </div>
           </a-menu-item>
           <a-menu-item v-for="item in menu" :key="item.path">{{ item.name }}</a-menu-item>
@@ -43,9 +45,11 @@ import type { User } from '@/stores/entity/user'
 import type { ComputedRef } from 'vue'
 import { usePermissionStore } from '@/stores/permission'
 
-const props = defineProps<{
-  loadMenu: any
-}>()
+import { Icon } from '@arco-design/web-vue'
+
+const IconFont = Icon.addFromIconFontCn({
+  src: 'https://at.alicdn.com/t/font_180975_ue66sq60vyd.js'
+})
 
 //定义路由 router
 const router = useRouter()
@@ -55,7 +59,7 @@ const userStore = useLoginUserStore()
 
 const isLogin = ref(false)
 
-const menu = ref(props.loadMenu)
+const menu = ref()
 
 //选中的菜单项
 const selectedKeys = ref(['/'])
@@ -72,11 +76,9 @@ const toLogin = () => {
 onMounted(async () => {
   await useLoginUserStore().getLoginUser()
   isLogin.value = !loginUser.value.userRole.includes('notLogin')
-  const accessRoutes = usePermissionStore().generateRoutes(useLoginUserStore().loginUser.userRole)
-  accessRoutes.forEach((item) => {
-    router.addRoute(item)
-  })
-  menu.value = accessRoutes
+
+  menu.value = usePermissionStore().routes
+  console.log('menu.value', menu.value)
   selectedKeys.value = [route.path]
 })
 
@@ -101,7 +103,15 @@ const jump = (key: string) => {
   box-sizing: border-box;
   width: 100%;
 }
-
+:deep(.arco-menu-horizontal) {
+  background-color: transparent;
+}
+:deep(
+    .arco-menu-horizontal .arco-menu-item:not(:first-child),
+    .arco-menu-horizontal .arco-menu-pop:not(:first-child)
+  ) {
+  background-color: transparent;
+}
 .arco-dropdown-open .arco-icon-down {
   transform: rotate(180deg);
 }

@@ -6,7 +6,8 @@ import { usePermissionStore } from '@/stores/permission'
 const whiteList = ['/auth/login', '/notAuth', '/auth/register']
 
 router.beforeEach(async (to, from, next) => {
-  // console.log('router beforeEach', to, from, next)
+  console.log('router beforeEach', to.path, from.path)
+  localStorage.setItem('currentPath', to.path)
 
   //检查用户是否是未登录
   if (useLoginUserStore().loginUser.userRole.includes(NOT_LOGIN)) {
@@ -21,6 +22,8 @@ router.beforeEach(async (to, from, next) => {
     accessRoutes.forEach((item) => {
       router.addRoute(item)
     })
+
+    console.log('accessRoutes', usePermissionStore().routes)
     //未登录，且cookie过期
     if (useLoginUserStore().loginUser.userRole.includes(NOT_LOGIN)) {
       // console.log('获取用户登录失败', res)
@@ -39,8 +42,9 @@ router.beforeEach(async (to, from, next) => {
       }
     } else {
       //code === 0，未登录，但 cookie 未过期
+      // console.log('123', to.path)
 
-      next()
+      next(`${to.path}`)
     }
     //用户已登录，直接放行
   } else {

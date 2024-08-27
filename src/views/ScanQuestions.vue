@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 import type { QuestionQueryRequest } from '@/generated'
 import { QuestionControllerService } from '@/generated'
 import { Message } from '@arco-design/web-vue'
-import { dataFormat } from '@/utils/util'
+import { dataFormat, passPercentage } from '@/utils/util'
 
 onMounted(() => {
   QuestionControllerService.listQuestionVoByPageUsingPost(requestData).then((res) => {
@@ -64,19 +64,10 @@ const colors = [
   'magenta',
   'gray'
 ]
-
-const passPercentage = (acceptedNum: number, submitNum: number) => {
-  if (submitNum === 0) {
-    return '0%  (0/0)'
-  } else {
-    const percentage = (acceptedNum * 100) / submitNum
-    return `${percentage}%  (${acceptedNum}/${submitNum})`
-  }
-}
 </script>
 
 <template>
-  <div>
+  <div style="margin: 20px">
     <a-table :columns="columns" :data="data">
       <template #tags="{ record }">
         <a-space wrap>

@@ -1,15 +1,48 @@
 <template>
-  <div id="container" style="min-height: 70vh"></div>
+  <div>
+    <div id="container" style="min-height: 60vh"></div>
+    <a-button type="primary" style="margin: 10px" @click="submitQuestion">提交代码</a-button>
+  </div>
 </template>
 
 <script setup>
 import * as monaco from 'monaco-editor'
-import { onMounted, ref, toRaw, watch } from 'vue'
+import { computed, onMounted, reactive, ref, toRaw, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { QuestionControllerService } from '@/generated/services/QuestionControllerService.ts'
+import { Message } from '@arco-design/web-vue'
 
 const codeEditor = ref()
 
 const props = defineProps({
   language: String
+})
+
+const router = useRouter()
+const route = useRoute()
+
+const submitQuestion = async () => {
+  questionSubmitAddRequest.code = toRaw(codeEditor.value).getValue()
+  console.log('questionSubmitAddRequest:', questionSubmitAddRequest)
+  await QuestionControllerService.doQuestionSubmitUsingPost(questionSubmitAddRequest).then(
+    (res) => {
+      if (res.code === 0) {
+        Message.success('提交成功')
+        router.push('/scanQuestionSubmit')
+      }
+    }
+  )
+}
+
+const questionSubmitAddRequest = reactive({
+  language: props.language,
+  code: value,
+  questionid: computed(() => {
+    if (route.params.id.includes(':id*')) {
+      return 1
+    }
+    return route.params.id
+  })
 })
 
 // const fillValue = () => {
@@ -48,9 +81,12 @@ self.MonacoEnvironment = {
     }
   }
 }
-const value = /* set from `myEditor.getModel()`: */ `function hello() {
-	alert('Hello world!');
-	console.log("xx");
+const value = /* set from `myEditor.getModel()`: */ `public class Main {
+    public static void main(String[] args) {
+        int a = Integer.parseInt(args[0]);
+        int b = Integer.parseInt(args[1]);
+        System.out.println(a + b);
+    }
 }`
 
 watch(

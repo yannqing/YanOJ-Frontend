@@ -76,6 +76,17 @@ export const asyncRoutes: RouteRecordRaw[] = [
     component: () => import('../views/CreateQuestionView.vue')
   },
   {
+    path: '/scanQuestionSubmit',
+    name: '浏览题目提交',
+    meta: {
+      access: [USER]
+    },
+    // route level code-splitting
+    // this generates a separate chunk (About.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import('../views/ScanQuestionSubmit.vue')
+  },
+  {
     path: '/about',
     name: '关于我的',
     meta: {
