@@ -67,7 +67,7 @@ const colors = [
 </script>
 
 <template>
-  <div style="margin: 20px">
+  <div style="margin: 20px" class="animate__animated animate__tada">
     <a-table :columns="columns" :data="data">
       <template #tags="{ record }">
         <a-space wrap>

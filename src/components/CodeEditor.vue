@@ -7,7 +7,7 @@
 
 <script setup>
 import * as monaco from 'monaco-editor'
-import { computed, onMounted, reactive, ref, toRaw, watch } from 'vue'
+import { onMounted, reactive, ref, toRaw, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { QuestionControllerService } from '@/generated/services/QuestionControllerService.ts'
 import { Message } from '@arco-design/web-vue'
@@ -23,7 +23,9 @@ const route = useRoute()
 
 const submitQuestion = async () => {
   questionSubmitAddRequest.code = toRaw(codeEditor.value).getValue()
+  questionSubmitAddRequest.questionid = getQuestionId()
   console.log('questionSubmitAddRequest:', questionSubmitAddRequest)
+  console.log('questionId:', questionSubmitAddRequest.questionid)
   await QuestionControllerService.doQuestionSubmitUsingPost(questionSubmitAddRequest).then(
     (res) => {
       if (res.code === 0) {
@@ -37,13 +39,15 @@ const submitQuestion = async () => {
 const questionSubmitAddRequest = reactive({
   language: props.language,
   code: value,
-  questionid: computed(() => {
-    if (route.params.id.includes(':id*')) {
-      return 1
-    }
-    return route.params.id
-  })
+  questionid: ''
 })
+
+const getQuestionId = () => {
+  if (route.params.id.includes(':id*')) {
+    return 1
+  }
+  return route.params.id[0]
+}
 
 // const fillValue = () => {
 //   if (!codeEditor.value) {

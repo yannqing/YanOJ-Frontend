@@ -14,14 +14,21 @@
       </div>
       <div class="button-group">
         <a-space wrap>
-          <a-button type="primary" shape="round" size="large">
+          <a-button
+            type="primary"
+            shape="round"
+            size="large"
+            style="height: 50px; width: 130px"
+            @click="$router.push('/ScanQuestions')"
+          >
             <span>Get Start</span>
-            <icon-arrow-right />
+            <icon-arrow-right style="margin-left: 5px" />
           </a-button>
           <a-button
             type="outline"
             shape="round"
             size="large"
+            style="height: 50px; width: 130px"
             href="https://github.com/yannqing/YanOJ-Frontend"
             target="_blank"
           >
@@ -29,6 +36,23 @@
           </a-button>
         </a-space>
       </div>
+    </div>
+    <div>
+      <img
+        src="https://nefa.vercel.app/_nuxt/img/ellipse-1.4a34989.png"
+        style="position: absolute; left: 20px; bottom: 80px"
+        class="animate__animated animate__fadeInUp animate__delay-1s"
+      />
+      <img
+        src="https://nefa.vercel.app/_nuxt/img/ellipse-2.4f6027c.png"
+        style="position: absolute; left: 750px"
+        class="animate__animated animate__fadeInUp animate__delay-1s"
+      />
+      <img
+        src="https://nefa.vercel.app/_nuxt/img/ellipse-3.397d7d7.png"
+        style="position: absolute; right: 80px; bottom: 300px"
+        class="animate__animated animate__fadeInUp animate__delay-1s"
+      />
     </div>
     <div class="right-content animate__animated animate__bounceInRight">
       <img src="@/assets/mainIcon.png" :alt="alt" />
@@ -40,17 +64,19 @@
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
   overflow: hidden;
   width: 100%;
   padding: 20px;
   box-sizing: border-box;
+  //background-color: #e34232;
+  height: 70vh;
 }
 
 .left-content {
   flex: 1;
   max-width: 600px;
   padding-right: 20px;
+  margin-top: 10vh;
 }
 
 .signup-text {
@@ -66,19 +92,6 @@
   line-height: 1.2;
 }
 
-.gradient-text {
-  background: linear-gradient(
-    169.4deg,
-    #3984f4 -6.01%,
-    #0cd3ff 36.87%,
-    #2f7cf0 78.04%,
-    #0e65e8 103.77%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 .description {
   font-family: 'OCR A Std', monospace;
   font-size: 15px;
@@ -88,10 +101,10 @@
 .button-group {
   display: flex;
   gap: 10px;
+  margin-top: 60px;
 }
 
 .right-content {
-  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -115,3 +128,7 @@
   }
 }
 </style>
+<script setup lang="ts">
+import { alt } from '@/common/gloableVariable.js'
+import { IconArrowRight } from '@arco-design/web-vue/es/icon'
+</script>
