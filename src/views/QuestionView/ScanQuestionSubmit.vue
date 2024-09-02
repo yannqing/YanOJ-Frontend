@@ -3,10 +3,14 @@
     <!--    查询条件-->
     <a-space wrap style="margin-bottom: 10px">
       <div>题号</div>
-      <a-input v-model="requestData.questionId" />
+      <a-input v-model:number="requestData.questionId" />
       <div style="margin-left: 10px">编程语言</div>
       <a-select default-value="java" style="width: 200px" v-model="requestData.language">
-        <a-option :value="language" v-for="(language, index) in languages" :index="index"
+        <a-option
+          :value="language"
+          v-for="(language, index) in languages"
+          :index="index"
+          :key="index"
           >{{ language }}
         </a-option>
       </a-select>
@@ -39,7 +43,7 @@
       <template #status="{ record }">
         <a-tag :color="getTagColor(record.status, record.judgeinfo.message)">
           {{ getTagMsg(record.status, record.judgeinfo.message) }} &nbsp;<a-spin
-            size="12"
+            :size="12"
             class="the-spin-color"
             v-if="record.status === 1"
           >
@@ -64,7 +68,7 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import type { QuestionQueryRequest } from '@/generated'
+import type { QuestionQueryRequest, QuestionSubmitQueryRequest } from '@/generated'
 import { QuestionControllerService } from '@/generated'
 import { Message } from '@arco-design/web-vue'
 import { dataFormat } from '@/utils/util'
@@ -76,11 +80,11 @@ onMounted(async () => {
 })
 
 // 请求数据
-const requestData: QuestionQueryRequest = reactive({
+const requestData: QuestionSubmitQueryRequest = reactive({
   current: 1,
   pageSize: 7,
   language: '',
-  questionId: ''
+  questionId: 0
 })
 // 数据总数初始化
 const pagination = reactive({

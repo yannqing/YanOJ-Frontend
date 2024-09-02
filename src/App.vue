@@ -18,7 +18,12 @@ const doInit = async () => {
   accessRoutes.forEach((item) => {
     router.addRoute(item)
   })
-  await router.replace(localStorage.getItem('currentPath'))
+  const goToRoute: string | null = localStorage.getItem('currentPath')
+  if (goToRoute !== null) {
+    await router.replace(goToRoute)
+  } else {
+    await router.replace('/')
+  }
 }
 
 onMounted(() => {

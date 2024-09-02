@@ -33,7 +33,7 @@ import { QuestionControllerService } from '@/generated'
 import { Message } from '@arco-design/web-vue'
 import { reactive } from 'vue'
 
-const receiveChild = (val) => {
+const receiveChild = (val: any) => {
   request.content = val
 }
 

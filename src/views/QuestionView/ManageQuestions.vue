@@ -1,6 +1,6 @@
 <template>
   <div style="margin: 20px" class="">
-    <a-table :columns="columns" :data="data">
+    <a-table :columns="columns" :data="data" :pagination="false">
       <template #tags="{ record }">
         <a-space wrap>
           <a-tag v-for="(tag, index) of record.tags" :key="index" :color="colors[index]"
@@ -23,6 +23,15 @@
         </a-space>
       </template>
     </a-table>
+    <!--    分页-->
+    <a-pagination
+      :total="pagination.total"
+      :page-size="requestData.pageSize"
+      :current="requestData.current"
+      @change="handlePageChange"
+      :show-total="true"
+      style="margin: 10px 10px 0 10px"
+    />
     <!--编辑框-->
     <a-modal
       v-model:visible="visible"
@@ -51,10 +60,12 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import type { QuestionQueryRequest } from '@/generated'
+import type { UnwrapNestedRefs } from 'vue'
+import type { QuestionQueryRequest, QuestionUpdateRequest } from '@/generated'
 import { QuestionControllerService } from '@/generated'
 import { Message, Modal } from '@arco-design/web-vue'
 import { dataFormat } from '@/utils/util'
+import type { updateInterface } from '@/stores/entity/manageQuestions'
 
 onMounted(() => {
   flushData()
@@ -65,6 +76,7 @@ const flushData = () => {
     console.log('题目信息：', res)
     if (res.code === 0) {
       data.value = res.data.records
+      pagination.total = res.data.total
     } else {
       Message.success(res.message)
     }
@@ -74,6 +86,14 @@ const flushData = () => {
 const requestData: QuestionQueryRequest = {
   current: 1,
   pageSize: 10
+}
+
+const pagination = reactive({
+  total: 0
+})
+
+const handlePageChange = (page: number) => {
+  requestData.current = page
 }
 
 const columns = [
@@ -142,20 +162,21 @@ const passPercentage = (acceptedNum: number, submitNum: number) => {
 }
 
 const visible = ref(false)
-const updateForm = reactive({
-  id: '',
+
+const updateForm: QuestionUpdateRequest = reactive({
+  id: 0,
   title: '',
   content: '',
   tags: []
 })
-const deleteId = reactive({
+const deleteId: UnwrapNestedRefs<{ id: string }> = reactive({
   id: ''
 })
 
-const handleClick = (data: object) => {
+const handleClick = (data: updateInterface) => {
   console.log('data', data)
   visible.value = true
-  updateForm.id = data.id
+  updateForm.id = parseInt(data.id)
   updateForm.title = data.title
   updateForm.content = data.content
   updateForm.tags = data.tags
@@ -173,9 +194,9 @@ const handleEditOk = () => {
 }
 const handleEditCancel = () => {
   visible.value = false
-  form.title = ''
-  form.content = ''
-  form.tags = []
+  updateForm.title = ''
+  updateForm.content = ''
+  updateForm.tags = []
 }
 
 const deleteById = () => {
@@ -189,7 +210,7 @@ const deleteById = () => {
   })
 }
 
-const handleClickWarning = (data: object) => {
+const handleClickWarning = (data: updateInterface) => {
   deleteId.id = data.id
   console.log('deleteId.value', deleteId.id)
   Modal.warning({

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
 import { IconRight, IconArrowRise } from '@arco-design/web-vue/es/icon'
 
 const props = defineProps({
@@ -16,7 +15,7 @@ const props = defineProps({
   >
     <div style="font-weight: bold; display: flex; justify-content: space-between">
       <span>{{ props.headerMsg }}</span>
-      <router-link style="margin-right: 25px; color: #188cff; text-decoration: none" to
+      <router-link style="margin-right: 25px; color: #188cff; text-decoration: none" to="#"
         >More <icon-right
       /></router-link>
     </div>

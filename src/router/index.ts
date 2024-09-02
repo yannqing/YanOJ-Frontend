@@ -49,7 +49,7 @@ export const asyncRoutes: RouteRecordRaw[] = [
     meta: {
       access: [USER]
     },
-    component: () => import('../views/QuestionView/DoQuestionView.vue')
+    component: () => import('@/views/QuestionView/DoQuestionView.vue')
   },
   {
     path: '/admin',

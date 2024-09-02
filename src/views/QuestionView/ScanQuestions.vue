@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import type { QuestionQueryRequest } from '@/generated'
 import { QuestionControllerService } from '@/generated'
 import { Message } from '@arco-design/web-vue'
@@ -10,10 +10,19 @@ onMounted(() => {
     console.log('题目信息：', res)
     if (res.code === 0) {
       data.value = res.data.records
+      pagination.total = res.data.total
     } else {
       Message.success(res.message)
     }
   })
+})
+
+const handlePageChange = (page: number) => {
+  requestData.current = page
+}
+
+const pagination = reactive({
+  total: 0
 })
 
 const requestData: QuestionQueryRequest = {
@@ -88,6 +97,15 @@ const colors = [
         <a-button type="primary" @click="$router.push(`/doQuestion/${record.id}`)">做题</a-button>
       </template>
     </a-table>
+    <!--    分页-->
+    <a-pagination
+      :total="pagination.total"
+      :page-size="requestData.pageSize"
+      :current="requestData.current"
+      @change="handlePageChange"
+      :show-total="true"
+      style="margin: 10px 10px 0 10px"
+    />
   </div>
 </template>
 
