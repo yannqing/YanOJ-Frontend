@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     // 安装依赖
-                    sh "sudo npm install"
+                    sh "npm install"
                 }
             }
         }
@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     // 编译构建
-                    sh "sudo npm run build"
+                    sh "npm run build"
                 }
             }
         }
