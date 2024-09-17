@@ -8,6 +8,12 @@ const whiteList = ['/auth/login', '/notAuth', '/auth/register']
 router.beforeEach(async (to, from, next) => {
   console.log('router beforeEach', to.path, from.path)
   localStorage.setItem('currentPath', to.path)
+  // 重新加载路由
+  const accessRoutes = usePermissionStore().generateRoutes(useLoginUserStore().loginUser.userRole)
+  accessRoutes.forEach((item) => {
+    router.addRoute(item)
+  })
+  // 此时 router = ['/', '/ScanQuestions', '']
 
   //检查用户是否是未登录
   if (useLoginUserStore().loginUser.userRole.includes(NOT_LOGIN)) {
@@ -17,11 +23,6 @@ router.beforeEach(async (to, from, next) => {
     //未登录则重新获取，以此来判断cookie是否过期
     const res = await useLoginUserStore().getLoginUser()
     // console.log('获取登录用户之后', useLoginUserStore().loginUser)
-    // 重新加载路由
-    const accessRoutes = usePermissionStore().generateRoutes(useLoginUserStore().loginUser.userRole)
-    accessRoutes.forEach((item) => {
-      router.addRoute(item)
-    })
 
     console.log('accessRoutes', usePermissionStore().routes)
     //未登录，且cookie过期
@@ -29,8 +30,12 @@ router.beforeEach(async (to, from, next) => {
       // console.log('获取用户登录失败', res)
       //如果是白名单的路由或是不需要权限的路由，直接放行
       let isIncludeNoAccessRoute = false
+      console.log('yyy')
       accessRoutes.forEach((route) => {
+        console.log('route.path', route.path)
+        console.log('to.path', to.path)
         if (route.path === to.path) {
+          console.log('xxx')
           isIncludeNoAccessRoute = true
           return
         }

@@ -1,10 +1,21 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import GlobalHeader from '@/components/GlobalHeader.vue'
-import { onMounted } from 'vue'
+import { onBeforeMount, onMounted } from 'vue'
 import { usePermissionStore } from '@/stores/permission'
+import { useLoginUserStore } from '@/stores/user'
+import router from '@/router'
 
-onMounted(async () => {
+onMounted(async () => {})
+
+onBeforeMount(async () => {
+  if (usePermissionStore().routes.length === 0) {
+    // 重新加载路由
+    const accessRoutes = usePermissionStore().generateRoutes(useLoginUserStore().loginUser.userRole)
+    accessRoutes.forEach((item) => {
+      router.addRoute(item)
+    })
+  }
   console.log('基础布局', usePermissionStore().routes)
 })
 </script>

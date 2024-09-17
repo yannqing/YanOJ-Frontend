@@ -2,7 +2,8 @@
 import gfm from '@bytemd/plugin-gfm'
 import highlight from '@bytemd/plugin-highlight'
 import gemoji from '@bytemd/plugin-gemoji'
-import type { Editor } from '@bytemd/vue-next'
+// 这里不是错误，不能改为 type 引入
+import { Editor } from '@bytemd/vue-next'
 import { ref } from 'vue'
 
 const value = ref('')

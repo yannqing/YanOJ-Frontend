@@ -14,16 +14,16 @@ provide('isRoutesGenerated', isRoutesGenerated)
 
 const doInit = async () => {
   console.log('hello，欢迎来到yanOJ')
-  const accessRoutes = usePermissionStore().generateRoutes(useLoginUserStore().loginUser.userRole)
-  accessRoutes.forEach((item) => {
-    router.addRoute(item)
-  })
-  const goToRoute: string | null = localStorage.getItem('currentPath')
-  if (goToRoute !== null) {
-    await router.replace(goToRoute)
-  } else {
-    await router.replace('/')
-  }
+  // const accessRoutes = usePermissionStore().generateRoutes(useLoginUserStore().loginUser.userRole)
+  // accessRoutes.forEach((item) => {
+  //   router.addRoute(item)
+  // })
+  // const goToRoute: string | null = localStorage.getItem('currentPath')
+  // if (goToRoute !== null) {
+  //   await router.replace(goToRoute)
+  // } else {
+  //   await router.replace('/')
+  // }
 }
 
 onMounted(() => {

@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { ADMIN, USER } from '@/common/accessNUM'
 
+// const dashboard = (resolve: any) => require(['@/views/MainView.vue'], resolve)
+
 /**
  * 静态路由 （隐藏，且不需要预加载的）
  */
@@ -26,6 +28,16 @@ export const constantRoutes: RouteRecordRaw[] = [
       access: [USER]
     },
     component: () => import('../views/StaticView/NoAuthView.vue')
+  },
+  {
+    path: '/',
+    name: '主页',
+    component: () => import('../views/MainView.vue')
+  },
+  {
+    path: '/ScanQuestions',
+    name: '浏览题目',
+    component: () => import('../views/QuestionView/ScanQuestions.vue')
   }
 ]
 

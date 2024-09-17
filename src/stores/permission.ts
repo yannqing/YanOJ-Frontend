@@ -3,7 +3,6 @@ import type { Ref, UnwrapRef } from 'vue'
 import { defineStore } from 'pinia'
 import type { RouteRecordRaw } from 'vue-router'
 import { asyncRoutes } from '@/router'
-import { ADMIN } from '@/common/accessNUM'
 
 export const usePermissionStore = defineStore('permission', () => {
   const routes: Ref<UnwrapRef<any[]>> = ref([])
