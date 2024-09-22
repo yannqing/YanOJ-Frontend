@@ -5,8 +5,8 @@ import { QuestionControllerService } from '@/generated'
 import { Message } from '@arco-design/web-vue'
 import { dataFormat, passPercentage } from '@/utils/util'
 
-onMounted(() => {
-  QuestionControllerService.listQuestionVoByPageUsingPost(requestData).then((res) => {
+onMounted(async () => {
+  await QuestionControllerService.listQuestionVoByPageUsingPost(requestData).then((res) => {
     console.log('题目信息：', res)
     if (res.code === 0) {
       data.value = res.data.records
